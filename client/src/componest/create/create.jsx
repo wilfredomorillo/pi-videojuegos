@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {Link, useNavigate} from 'react-router-dom'
-import { createVideogame, getByGenres, getPlanforms } from "../../Redux/actions";
+import { createVideogame, getByGenres, getPlatforms } from "../../Redux/actions";
 import Generico from '../../assesn/generico.png'
+import './create.scss'
+
 function validate(input){
 
 let erros={}
@@ -13,8 +15,8 @@ if(!input.name){
     erros.name= 'nombre demaciado largo'
 }if (!input.description){
     erros.description= 'coloca descripcion'
-}else if (!input.description.length>100)
-erros.description= 'la descripcion es mas larga de lo esperado'
+}else if (!input.name.length>100)
+erros.name= 'la descripcion es mas larga de lo esperado'
 
 if (!input.released){
     erros.released= 'necesito fecha de lanzamiento'
@@ -33,7 +35,7 @@ function Create() {
 const dispatch= useDispatch()
 const navigate= useNavigate()
 const genres= useSelector((state)=>state.genres)
-const plaforms= useSelector((state)=> state.plaforms)
+const plaforms= useSelector((state)=> state.platforms)
 const allNames= useSelector((state)=>state.allVideogames)
 const [erros, setErrors]= useState({})
 const [input, setInput]= useState({
@@ -51,13 +53,13 @@ const [input, setInput]= useState({
 
 useEffect(()=>{
     dispatch(getByGenres())
-    dispatch(getPlanforms())
+    dispatch(getPlatforms())
 }, [dispatch])
 
 function handleSubmit(e){
 
 e.preventDefault()
-let noRepeat= allNames.filtet(n=> n.name=== input.name);
+let noRepeat= allNames.filter(n=> n.name=== input.name);
 if (noRepeat.length!==0){
     alert('ese nombre no esta disponible')
 }else if (!Object.getOwnPropertyNames(erros).length&& input.name&& input.description&& input.rating&& input.released){
@@ -102,10 +104,10 @@ function handleGenres(e){
     }
 }
 function handlePlatforms(e){
-    if (input.platforms.includes(e.target.value)){
+    if (!input.platforms.includes(e.target.value)){
         setInput({
-            ...input,
-            platforms:[ ...input.platforms , e.target.value,]
+            ... input,
+            platforms:[ ...input.platforms , e.target.value]
         })
     }
 }
@@ -136,7 +138,7 @@ return (
 
 <form onSubmit={e=> handleSubmit(e) }>
 <div>
-<label><strong>Nombre:</strong></label>
+<label><strong className="index">Nombre:</strong></label>
 <input type="text" value={input.name} placeholder='Name' name='name' onChange={e=>handleChange(e)}/>
 {erros.name&&(
     <p className="error">{erros.name}</p>
@@ -144,7 +146,7 @@ return (
 
 </div>
 <div>
-    <label ><strong>Descriccion:</strong></label>
+    <label ><strong className="index">Descriccion:</strong></label>
     <textarea type='text' value={input.description} name="description"  placeholder="buen juego" onChange={(e)=>handleChange(e)}></textarea>
 </div>
 <div>
@@ -155,22 +157,22 @@ return (
 )}
 </div>
 <div>
-    <label><strong>fecha de lanzamiento:</strong></label>
+    <label><strong className="index">fecha de lanzamiento:</strong></label>
     <input type="date" id="start" value={input.released}  max='01/01/2023' placeholder='21/02/1990' name='released' onChange={e => handleChange(e)}/>
     {erros.released&&(
         <p className="error">{erros.released}</p>
     )}
 </div>
 <div>
-<label><strong>Imagen: </strong></label>
+<label><strong className="index">Imagen: </strong></label>
 <input type="text" value={input.image} name='image' placeholder='https://...com' onChange={e => handleChange(e)} />
 
 </div>
 
 <div>
-
+<label ><strong className="index">Genero:</strong></label>
 <select onChange={e=>handleGenres(e)}>
-<option value="selected" hidden>Genero:</option>
+<option value="selected" hidden>Genero</option>
 {genres?.sort(function(a,b){
     if(a.name<b.name)return-1
     if (a.name>b.name)return 1
@@ -195,22 +197,19 @@ return (
 
 </div>
 <div>
-
-<select onChange={e=>handlePlatforms(e)}>
-
-<option value="selected" hidden>Platafoma:</option>
-{plaforms?.spor(function(a,b){
-    if(a.name>b.name) return-1
-    if(a.name<b.name) return 1
-    return 0
-}).map((pla)=>{
-    return(
-    <option value={pla.name} key={pla.id}>{pla.name}</option>
-    )
-})
-}
-
-</select>
+<label ><strong className="index">Plataforma:</strong></label>
+<select onChange={e => handlePlatforms(e)}>
+              <option value='selected' hidden >Platforms</option>
+              {plaforms?.sort(function (a, b) {
+                if (a.name < b.name) return -1
+                if (a.name > b.name) return 1
+                return 0
+              }).map(pla => {
+                return (
+                  <option value={pla} key={pla}>{pla}</option>
+                )
+              })}
+            </select>
 
 {input.platforms.map(e=>{
     return(
