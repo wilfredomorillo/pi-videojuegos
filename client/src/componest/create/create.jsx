@@ -106,7 +106,7 @@ function handleGenres(e){
 function handlePlatforms(e){
     if (!input.platforms.includes(e.target.value)){
         setInput({
-            ... input,
+            ...input,
             platforms:[ ...input.platforms , e.target.value]
         })
     }

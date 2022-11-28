@@ -14,7 +14,7 @@ function Paginado({gamesPerPage, allGame, paginado}) {
     return(
         <nav>
             <ul className="paginado">
-                {pageNumber&& pageNumber.map(number=>(
+                {pageNumber && pageNumber.map(number=>(
                     <li key={number}>
                         <button onClick={()=>paginado(number)}>{number}</button>
                     </li>

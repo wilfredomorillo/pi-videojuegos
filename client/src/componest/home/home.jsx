@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import './home.scss'
 import NavBar from "../NavBar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +8,7 @@ import Videogames from "../videogame/videogames";
 import Paginado from "../paginado/paginado";
 
 function Home(){
-
+    console.log(Home)
     const allGames= useSelector(state=>state.allVideogames)
 
     const [currentPage, setCurrentPage]= useState(1)
